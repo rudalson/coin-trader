@@ -24,7 +24,7 @@ class CoinOneMachine(Machine):
         config.ini에서 access_token, secret_key 정보를 읽어옵니다.
         """
         config = configparser.ConfigParser()
-        config.read('../conf/config.ini')
+        config.read('conf/config.ini')
         self.access_token = config['COINONE']['access_token']
         self.secret_key = config['COINONE']['secret_key']
 
@@ -86,7 +86,30 @@ class CoinOneMachine(Machine):
         return self.expire, self.access_token, self.access_token
 
     def get_ticker(self, currency_type=None):
-        pass
+        """마지막 체결정보(Tick)을 얻기 위한 메소드입니다.
+
+        Args:
+            currency_type(str):화폐 종류를 입력받습니다. 화폐의 종류는 TRADE_CURRENCY_TYPE에 정의되어있습니다.
+
+        Returns:
+            결과를 딕셔너리로 반환합니다.
+            결과의 필드는 timestamp, last, bid, ask, high, low, volume이 있습니다.
+
+        Raise:
+            currency_type이 없으면 Exception을 발생시킵니다.
+        """
+        ticker_api_path = '/ticker/'
+        url_path = self.BASE_API_URL + ticker_api_path
+        params = {"currency": currency_type}
+        res = requests.get(url_path, params=params)
+        response_json = res.json()
+        result = {}
+        result["timestamp"] = str(response_json["timestamp"])
+        result["last"] = response_json["last"]
+        result["high"] = response_json["high"]
+        result["low"] = response_json["low"]
+        result["volume"] = response_json["volume"]
+        return result
 
     def get_filled_orders(self, currency_type=None, per="minute"):
         pass
@@ -299,7 +322,7 @@ class CoinOneMachine(Machine):
         payload = {
             "access_token": self.access_token,
             "order_id": order_id,
-            "price":price,
+            "price": price,
             "qty": qty,
             "is_ask": 1 if order_type is "sell" else 0,
             "currency": currency_type,
