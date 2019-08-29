@@ -1,3 +1,4 @@
+import os
 import unittest
 from autotrading.machine.coinone_machine import CoinOneMachine
 import inspect
@@ -5,6 +6,8 @@ import inspect
 
 class CoinOneMachineTestCase(unittest.TestCase):
     def setUp(self):
+        project_dir = os.path.abspath(os.getcwd())
+        print(os.path.abspath(project_dir))
         self.coinone_machine = CoinOneMachine()
 
     def tearDown(self):
@@ -24,7 +27,7 @@ class CoinOneMachineTestCase(unittest.TestCase):
 
     def test_get_ticker(self):
         print(inspect.stack()[0][3])
-        result = self.coinone_machine.get_ticker(currency_type="xrp")
+        result = self.coinone_machine.get_ticker(currency_type="btc")
         assert result
         print(result)
 

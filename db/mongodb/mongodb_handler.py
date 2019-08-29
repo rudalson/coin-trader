@@ -18,7 +18,7 @@ class MongoDbHandler:
         initializer
         """
         config = configparser.ConfigParser()
-        config.read('../../../conf/config.ini')
+        config.read('../../conf/config.ini')
         self.db_config = {"local_ip": config['MONGODB']['local_ip'], "port": config['MONGODB']['port'],
                           "remote_host": config['MONGODB']['remote_host'], "user": config['MONGODB']['user'],
                           "password": config['MONGODB']['password']}

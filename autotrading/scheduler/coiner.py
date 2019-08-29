@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from autotrading.machine.base_machine import Machine
 
@@ -27,9 +28,9 @@ class Coiner:
         if currency_pair is None:
             return None
         result = self.machine.get_filled_orders(currency_pair, time)
-        for item in result:
+        for item in result['completeOrders']:
             item["coin"] = currency_pair
-            item["timestamp"] = item["timestamp"] / 1000
+            item["timestamp"] = int(item["timestamp"]) / 1000
             d = datetime.fromtimestamp(item["timestamp"])
             item["year"] = d.year
             item["month"] = d.month
@@ -37,5 +38,5 @@ class Coiner:
             item["hour"] = d.hour
             item["minute"] = d.minute
             item["second"] = d.second
-            item["amount"] = float(item["amount"])
-        return result
+            item["qty"] = float(item["qty"])
+        return result['completeOrders']

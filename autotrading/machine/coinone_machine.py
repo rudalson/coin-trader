@@ -1,5 +1,5 @@
 import configparser
-
+import sys
 import requests
 import time
 import base64
@@ -24,7 +24,7 @@ class CoinOneMachine(Machine):
         config.ini에서 access_token, secret_key 정보를 읽어옵니다.
         """
         config = configparser.ConfigParser()
-        config.read('conf/config.ini')
+        config.read('../../conf/config.ini')
         self.access_token = config['COINONE']['access_token']
         self.secret_key = config['COINONE']['secret_key']
 
@@ -112,7 +112,23 @@ class CoinOneMachine(Machine):
         return result
 
     def get_filled_orders(self, currency_type=None, per="minute"):
-        pass
+        """체결정보를 얻어오기 위한 메소드입니다.
+
+                Args:
+                    currency_type(str):화폐 종류를 입력받습니다. 화폐의 종류는 TRADE_CURRENCY_TYPE에 정의되어있습니다.
+                    per(str): minute, hour, day로 체결정보를 받아올 시간을 지정합니다.
+
+                Returns:
+                   가장 최근 체결정보를 딕셔너리의 리스트 형태로 반환합니다.
+                """
+        if currency_type is None:
+            raise Exception("Need to currency_type")
+        time.sleep(1)
+        params = {'currency': currency_type}
+        url_path = self.BASE_API_URL + "/trades/"
+        res = requests.get(url_path, params=params)
+        result = res.json()
+        return result
 
     def get_signature(self, encoded_payload, secret_key):
         """
