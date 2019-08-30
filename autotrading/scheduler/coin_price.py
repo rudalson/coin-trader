@@ -1,14 +1,23 @@
 import os
 import sys
 
-from db.mongodb import mongodb_handler
-from autotrading.machine.coinone_machine import CoinOneMachine
-from autotrading.scheduler.coiner import Coiner
-
 project_dir = os.path.abspath(os.getcwd())
 sys.path.append(project_dir)
 
-if __name__ == "__main__":
+from autotrading.db.mongodb import mongodb_handler
+from autotrading.machine.coinone_machine import CoinOneMachine
+from autotrading.scheduler.coiner import Coiner
+
+from celery import Celery
+
+app = Celery('get_coin_info', backend='redis://localhost:6379/0', broker='redis://localhost:6379/0')
+
+
+# app = Celery('get_coin_info', broker='redis://guest@localhost//')
+
+
+@app.task
+def get_coin_info():
     machine = CoinOneMachine()
     coiner = Coiner(machine)
 

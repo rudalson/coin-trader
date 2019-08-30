@@ -2,7 +2,7 @@
 Test mongo handler
 """
 import unittest, inspect
-from db.mongodb.mongodb_handler import MongoDbHandler
+from autotrading.db.mongodb.mongodb_handler import MongoDbHandler
 
 
 class MongoDbHandlerTestCase(unittest.TestCase):
